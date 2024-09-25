@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script>
+        const USERNAME = "{{ username }}";
+        const EXPIRATION = {{ expiration }};
+    </script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+</head>
+<body>
+    <h2>Welcome to the Dashboard, {{ username }}!</h2>
+    <p>Your session will expire in 10 seconds of inactivity.</p>
+    <p>Your token is: <strong>{{ token }}</strong></p>
+    <p>Your token payload is: <strong>{{ payload }}</strong></p>
+
+    <form method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value=""><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value=""><br><br>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" value=""><br><br>
+
+        <label for="textField">Text Field:</label>
+        <input type="text" id="textField" name="textField" value=""><br><br>
+
+        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+        <!-- Retrieve Unsaved Changes Button -->
+        {% if unsaved_data %}
+        <a href="#" id="retrieveLink" onclick="retrieveFormData()">Retrieve Unsaved Changes</a>
+        {% endif %}
+    </form>
+
+    <form id="logoutForm" method="POST" action="{{ url_for('logout') }}">
+        <input type="hidden" name="username" value="{{ username }}">
+        <button type="submit" onclick="saveFormData()">Logout</button>
+    </form>
+
+    <form id="logoutAllForm" method="POST" action="{{ url_for('logout_all') }}">
+        <input type="hidden" name="username" value="{{ username }}">
+        <button type="button" onclick="handleLogoutAll()">Logout from all devices</button>
+    </form>
+    
+
+    <!-- Store unsaved data in a hidden div for JavaScript to access -->
+    <div id="unsavedData" style="display: none;">{{ unsaved_data|tojson }}</div>
+</body>
+</html>
